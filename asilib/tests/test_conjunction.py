@@ -22,7 +22,7 @@ except ImportError as err:
 import asilib
 import asilib.asi.fake_asi
 import asilib.asi
-from asilib.tests.mock_footprint import footprint
+from .mock_footprint import footprint
 
 
 t0 = dateutil.parser.parse('2014-05-05T04:49:10')
