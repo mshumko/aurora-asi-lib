@@ -50,53 +50,8 @@ def test_trex_nir_no_file():
     with pytest.raises(requests.exceptions.HTTPError):
         asilib.asi.trex_nir('gill', time='2011/07/07T02:00')
     return
+    
 
-
-# def test_trex_nir_partial_files():
-#     """
-#     Tests that themis() returns a FileNotFound error when we try to download
-#     non-existant data.
-#     """
-#     with pytest.raises(FileNotFoundError):
-#         themis.themis('pina', time_range=['2011/07/07T04:15', '2011/07/07T04:23'], missing_ok=False)
-
-#     img = themis.themis(
-#         'pina',
-#         time_range=['2011/07/07T04:15', '2011/07/07T04:23:30'],
-#         missing_ok=True,
-#         redownload=True,
-#     )
-#     assert img.file_info['path'][0].name == '20110707_0421_pina_themis18_full.pgm.gz'
-#     assert img.file_info['path'][1].name == '20110707_0422_pina_themis18_full.pgm.gz'
-#     assert img.file_info['path'][2].name == '20110707_0423_pina_themis18_full.pgm.gz'
-#     return
-
-
-# def test_trex_nir_asi_meta():
-#     """
-#     Checks that the THEMIS ASI metadata is correct.
-#     """
-#     img = themis.themis(
-#         'pina',
-#         time_range=['2011/07/07T04:20', '2011/07/07T04:22:00'],
-#         missing_ok=True,
-#         redownload=False,
-#     )
-#     assert img.meta == {
-#         'array': 'THEMIS',
-#         'location': 'PINA',
-#         'lat': 50.15999984741211,
-#         'lon': -96.07000732421875,
-#         'alt': 0.0,
-#         'cadence': 3,
-#         'resolution': (256, 256),
-#     }
-#     return
-
-
-##########################################
-############# TEST EXAMPLES ##############
-##########################################
 @matplotlib.testing.decorators.image_comparison(
     baseline_images=['test_trex_nir_fisheye_map_example'],
     tol=20,
@@ -145,3 +100,103 @@ def test_trex_nir_keogram_example():
     ax[1].set_ylabel('Mag Lat')
     ax[1].set_xlabel('Time')
     return
+
+@matplotlib.testing.decorators.image_comparison(
+    baseline_images=['test_trex_rgb_mosaic_example'],
+    tol=20,
+    remove_text=True,
+    extensions=['png'],
+)
+def test_trex_rgb_mosaic_example():
+    """
+    Plot a mosaic of five TREx-RGB imagers.
+    """
+    from datetime import datetime
+    
+    import matplotlib.pyplot as plt
+    import asilib.map
+    import asilib
+    from asilib.asi.trex import trex_rgb
+    
+    time = datetime(2021, 11, 4, 7, 3, 51)
+    location_codes = ['FSMI', 'LUCK', 'RABB', 'PINA', 'GILL']
+    asi_list = []
+    ax = asilib.map.create_simple_map()
+    for location_code in location_codes:
+        asi_list.append(trex_rgb(location_code, time=time, colors='rgb'))
+    
+    asis = asilib.Imagers(asi_list)
+    asis.plot_map(ax=ax)
+    ax.set(title=time)
+    plt.tight_layout()
+
+@matplotlib.testing.decorators.image_comparison(
+    baseline_images=['test_trex_rgb_fisheye'],
+    tol=20,
+    remove_text=True,
+    extensions=['png'],
+)
+def test_trex_rgb_fisheye():
+    """
+    Plot one fisheye lens image.
+    """
+    from datetime import datetime
+    
+    import matplotlib.pyplot as plt
+    import asilib
+    from asilib.asi.trex import trex_rgb
+    
+    time = datetime(2021, 11, 4, 7, 3, 51)
+    asi = trex_rgb('PINA', time=time, colors='rgb')
+    asi.plot_fisheye()
+    plt.tight_layout()
+
+@matplotlib.testing.decorators.image_comparison(
+    baseline_images=['test_trex_rgb_map'],
+    tol=20,
+    remove_text=True,
+    extensions=['png'],
+)
+def test_trex_rgb_map():
+    """
+    Plot one fisheye lens image and project it onto a map.
+    """
+    from datetime import datetime
+    
+    import matplotlib.pyplot as plt
+    import asilib.map
+    import asilib
+    from asilib.asi.trex import trex_rgb
+    
+    time = datetime(2021, 11, 4, 7, 3, 51)
+    asi = trex_rgb('PINA', time=time, colors='rgb')
+    ax = asilib.map.create_simple_map(
+        lon_bounds=(asi.meta['lon']-7, asi.meta['lon']+7),
+        lat_bounds=(asi.meta['lat']-5, asi.meta['lat']+5)
+    )
+    asi.plot_map(ax=ax)
+    plt.tight_layout()
+
+@matplotlib.testing.decorators.image_comparison(
+    baseline_images=['test_trex_rgb_keogram'],
+    tol=20,
+    remove_text=True,
+    extensions=['png'],
+)
+def test_trex_rgb_keogram():
+    """
+    Plot a keogram
+    """
+    from datetime import datetime
+    
+    import matplotlib.pyplot as plt
+    import asilib
+    from asilib.asi.trex import trex_rgb
+    
+    time_range = (
+        datetime(2021, 11, 4, 7, 0, 0),
+        datetime(2021, 11, 4, 7, 5, 0)
+    )
+    asi = trex_rgb('PINA', time_range=time_range, colors='rgb')
+    asi.plot_keogram()
+    plt.tight_layout()

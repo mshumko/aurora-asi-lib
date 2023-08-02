@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased] - 
+
+### Added
+- Plot tests for `asilib.asi.trex_rgb()`.
+
 ## [0.18.1] - 2023-07-23
 
 ### Added
