@@ -126,11 +126,43 @@ class Imagers:
             imager.plot_map(**kwargs)
         return
     
-    # def animate_fisheye(self):
-    #     raise NotImplementedError
+    def animate_fisheye(self, ax:Tuple[plt.Axes], **kwargs):  # TODO: Explicitly define kwargs.
+        """
+        A wrapper for the ```animate_fisheye_gen()``` method that animates a series of
+        fisheye images. Any kwargs are passed directly into ```animate_fisheye_gen()```.
+
+        Parameters
+        ----------
+        ax: Tuple[plt.Axes]
+            Subplots corresponding to each fisheye lens image.
+        kwargs: dict
+            Keyword arguments directly passed into each :py:meth:`~asilib.imager.Imagers.animate_fisheye_gen()`
+            method.
+        """
+        movie_generator = self.animate_fisheye_gen(ax, **kwargs)
+
+        for _ in movie_generator:
+            pass
+        return
     
-    # def animate_fisheye_gen(self):
-    #     raise NotImplementedError
+    def animate_fisheye_gen(self, ax:Tuple[plt.Axes]):
+        """
+        Animate a series of fisheye images and superpose your data on each image.
+
+        A generator behaves like an iterator in that it plots one fisheye image
+        at a time and yields (similar to returns) the image. You can modify, or add
+        content to the image (such as a spacecraft position). Then, once the iteration
+        is complete, this method stitches the images into an animation. See the examples
+        below and in the examples page for use cases. The ```animate_fisheye()``` method
+        takes care of the iteration.
+
+        Parameters
+        ----------
+        ax: Tuple[plt.Axes]
+            Subplots corresponding to each fisheye lens image.
+        TODO: Finish kwargs.
+        """
+        raise NotImplementedError
     
     # def animate_map(self):
         
