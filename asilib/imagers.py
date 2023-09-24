@@ -162,7 +162,19 @@ class Imagers:
             Subplots corresponding to each fisheye lens image.
         TODO: Finish kwargs.
         """
-        raise NotImplementedError
+    
+        gen = self.parallel_image_loop(self, max_dt=None)
+
+        return
+    
+    def parallel_image_loop(self, max_dt=None):
+
+        gens = {img.meta['location_code']:iter(img) for img in self.imagers}
+        imager_names = gens.keys()
+
+        
+
+        return
     
     # def animate_map(self):
         
