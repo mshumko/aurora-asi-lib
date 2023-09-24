@@ -164,6 +164,9 @@ class Imagers:
         """
     
         gen = self.parallel_image_loop(self, max_dt=None)
+        for imager_id, image in gen:
+            # Plot fisheye lens images. Call the methods or make our own?
+            yield
 
         return
     
@@ -171,9 +174,15 @@ class Imagers:
 
         gens = {img.meta['location_code']:iter(img) for img in self.imagers}
         imager_names = gens.keys()
+        paused_gens = []
 
-        
-
+        for time_i in times:
+            for _imager in self.imagers:
+                try:
+                    asi_time = _imager[time_i]
+                except FileNotFoundError:
+                    pass
+                
         return
     
     # def animate_map(self):
