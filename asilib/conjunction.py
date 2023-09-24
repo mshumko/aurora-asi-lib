@@ -22,28 +22,28 @@ earth_radius_km = 6371
 
 
 class Conjunction:
+    """
+    Calculates conjunctions between an imager and a satellite.
+
+    Parameters
+    ----------
+    imager: asilib.Imager
+        An instance of the imager class.
+    satellite: tuple or pd.Dataframe
+        Satellite time stamps and position in the latitude, longitude, altitude (LLA) coordinates.
+
+        If a tuple, the first element must be a np.array of shape (n) filled with
+        datetime.datetime() timestamps. The second tuple element must be a np.array
+        of shape (n, 3) with the satellite positions with the columns mapping to
+        (latitude, longitude, altitude), in that order. This tuple is converted to a
+        pd.Dataframe described below.
+
+        If a pd.Dataframe, the index must be pd.Timestamp() and the columns correspond to
+        (latitude, longitude, altitude). The columns do not need to be in that order, but are
+        automatically distinguished by searching for columns that match "lat", "lon", and "alt"
+        (case insensitive).
+    """
     def __init__(self, imager: asilib.Imager, satellite: Union[tuple, pd.DataFrame]) -> None:
-        """
-        Calculates conjunctions between an imager and a satellite.
-
-        Parameters
-        ----------
-        imager: asilib.Imager
-            An instance of the imager class.
-        satellite: tuple or pd.Dataframe
-            Satellite time stamps and position in the latitude, longitude, altitude (LLA) coordinates.
-
-            If a tuple, the first element must be a np.array of shape (n) filled with
-            datetime.datetime() timestamps. The second tuple element must be a np.array
-            of shape (n, 3) with the satellite positions with the columns mapping to
-            (latitude, longitude, altitude), in that order. This tuple is converted to a
-            pd.Dataframe described below.
-
-            If a pd.Dataframe, the index must be pd.Timestamp() and the columns correspond to
-            (latitude, longitude, altitude). The columns do not need to be in that order, but are
-            automatically distinguished by searching for columns that match "lat", "lon", and "alt"
-            (case insensitive).
-        """
         self.imager = imager
         assert hasattr(imager, 'skymap'), 'imager does not contain a skymap.'
 
