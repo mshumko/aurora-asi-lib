@@ -171,6 +171,7 @@ class Imagers:
         return
     
     def parallel_image_loop(self, max_dt=None):
+        raise NotImplementedError
 
         gens = {img.meta['location_code']:iter(img) for img in self.imagers}
         imager_names = gens.keys()
@@ -194,7 +195,7 @@ class Imagers:
     #         self._calc_overlap_mask()
     #     raise NotImplementedError
 
-    def get_points(self, min_elevation:float=10)->Tuple[np.ndarray, np.ndarray]:
+    def get_points(self, min_elevation:float=10, overlap:bool=False)->Tuple[np.ndarray, np.ndarray]:
         """
         Get pixel intensities in each (lat, lon) grid point.
 
@@ -202,6 +203,9 @@ class Imagers:
         ----------
         min_elevation: float
             Only return pixel intensities above min_elevation.
+        overlap: bool
+            If False, return all pixel intensities. Otherwise, if any two pixels are co-located on
+            the (lat, lon) grid point, only the pixel at the higher elevation is kept.
 
         Returns
         -------
@@ -272,7 +276,8 @@ class Imagers:
         else:  # single-color (or white light)
             intensities  = np.zeros(0, dtype=float)
 
-        self._calc_overlap_mask()
+        if not overlap:
+            self._calc_overlap_mask()
 
         for _imager in self.imagers:
             assert 'time' in _imager.file_info.keys(), (

@@ -4,6 +4,7 @@
 
 ### Added
 - An advertisement figure and script. The script in `examples/global_coverage_map.py` plots a geographic map showing the spatial coverage (low-elevation field of view rings) of all imagers supported by aurora-asi-lib. The resulting plot is located in `docs/_static/global_coverage.png` and is shown in the `README.md` and `index.rst` files. 
+- An `overlap` kwarg for Imagers.get_points().
 
 ## [0.20.1]
 
