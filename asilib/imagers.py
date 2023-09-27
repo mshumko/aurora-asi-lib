@@ -85,6 +85,8 @@ class Imagers:
         Parameters
         ----------
         overlap: bool
+            If False, allow no overlapping pixels: if any two pixels are co-located on
+            the (lat, lon) grid point, only the pixel at the higher elevation pixel is plotted.
             If True, pixels that overlap between imager FOV's are overplotted such that only the 
             final imager's pixels are shown.
         kwargs: dict
@@ -204,8 +206,9 @@ class Imagers:
         min_elevation: float
             Only return pixel intensities above min_elevation.
         overlap: bool
-            If False, return all pixel intensities. Otherwise, if any two pixels are co-located on
+            If False, allow no overlapping pixels: if any two pixels are co-located on
             the (lat, lon) grid point, only the pixel at the higher elevation is kept.
+            If True, return all pixel intensities above min_elevation.
 
         Returns
         -------
