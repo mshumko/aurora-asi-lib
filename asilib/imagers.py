@@ -10,7 +10,7 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
-from asilib.imager import Imager, _haversine
+from asilib.imager import Imager, haversine
 
 
 class Imagers:
@@ -279,7 +279,7 @@ class Imagers:
             for j, other_imager in enumerate(self.imagers):
                 # Calculate the distance between all imager pixels and every other imager 
                 # location (including itself).
-                _distances[:, :, j] = _haversine(
+                _distances[:, :, j] = haversine(
                     imager.skymap['lat'], imager.skymap['lon'],
                     np.broadcast_to(other_imager.meta['lat'], imager.skymap['lat'].shape), 
                     np.broadcast_to(other_imager.meta['lon'], imager.skymap['lat'].shape)

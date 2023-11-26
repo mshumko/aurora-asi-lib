@@ -1063,7 +1063,7 @@ class Imager:
         nearest_pixels = np.nan * np.zeros_like(path)
 
         for i, (lat, lon) in enumerate(path):
-            distances = _haversine(
+            distances = haversine(
                 self.skymap['lat'],
                 self.skymap['lon'],
                 lat * np.ones_like(self.skymap['lon']),
@@ -1829,11 +1829,11 @@ class Imager:
         return p
 
 
-def _haversine(
+def haversine(
     lat1: np.array, lon1: np.array, lat2: np.array, lon2: np.array, r: float = 1
 ) -> np.array:
     """
-    _haversine distance equation.
+    Calculate the great circle distance at a radius r using the Haversine formula.
 
     Parameters
     ----------
