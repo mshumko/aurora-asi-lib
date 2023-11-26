@@ -1730,29 +1730,21 @@ class Imager:
         return f'{self.__class__.__qualname__}(' + params + ')'
 
     def _rgb_replacer(self, image):
-
-        #https://www.tutorialspoint.com/How-to-check-if-a-string-only-contains-certain-characters-in-Python
-
-        if set(self.meta['colors']).issubset('rgb'): #Checks if the colors selected are a subset of 'rgb', if there is a character not 'r' 'g' or 'b', it will raise an error
-            pass
-        else:
-            raise ValueError(" The only valid characters for the colors kwarg are 'r', 'g', 'b' ")
+        """
+        Mask unwanted RGB color channels with np.nan. matplotlib handles the masked channels using
+        an appropriate color map.
+        """
+        if not set(self.meta['colors']).issubset('rgb'):
+            raise ValueError(" The only valid characters for the colors kwarg are 'r', 'g', 'b'.")
         
-        if (*self.meta['colors'],) == ['r', 'g', 'b ']: #Passes colour removal if all colors are present, no logic required
-            pass
+        if 'r' not in (*self.meta['colors'],):
+            image[:, :, 0] = np.full(np.shape(image)[:-1], np.nan)
 
-        else:
-            # tests if color is selected, if not selected, then add nan values to array in lieu of color
-            if 'r' not in (*self.meta['colors'],):
-                # takes the shape of c, excluding the last index (-1) and replaces that matrix with nans
-                image[:, :, 0] = np.full(np.shape(image)[:-1], np.nan)
+        if 'g' not in (*self.meta['colors'],):
+            image[:, :, 1] = np.full(np.shape(image)[:-1], np.nan)
 
-            if 'g' not in (*self.meta['colors'],):
-                image[:, :, 1] = np.full(np.shape(image)[:-1], np.nan)
-
-            if 'b' not in (*self.meta['colors'],):
-                image[:, :, 2] = np.full(
-                    np.shape(image)[:-1], np.nan)
+        if 'b' not in (*self.meta['colors'],):
+            image[:, :, 2] = np.full(np.shape(image)[:-1], np.nan)
         return image
 
     def _pcolormesh_nan(
