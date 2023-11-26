@@ -1737,14 +1737,9 @@ class Imager:
         if not set(self.meta['colors']).issubset('rgb'):
             raise ValueError(" The only valid characters for the colors kwarg are 'r', 'g', 'b'.")
         
-        if 'r' not in (*self.meta['colors'],):
-            image[:, :, 0] = np.full(np.shape(image)[:-1], np.nan)
-
-        if 'g' not in (*self.meta['colors'],):
-            image[:, :, 1] = np.full(np.shape(image)[:-1], np.nan)
-
-        if 'b' not in (*self.meta['colors'],):
-            image[:, :, 2] = np.full(np.shape(image)[:-1], np.nan)
+        for i, color in enumerate(['r', 'g', 'b']):
+            if color not in (*self.meta['colors'],):
+                image[:, :, i] = np.full(np.shape(image)[:-1], np.nan)
         return image
 
     def _pcolormesh_nan(
